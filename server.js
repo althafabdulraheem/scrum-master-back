@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express=require('express');
 const srumRoutes=require('./src/routes/scrumroutes.js');
+const authRoutes=require('./src/routes/authroutes.js');
 const app=express();
 const cors = require('cors')
 const Db=require('./src/helpers/db.js');
@@ -14,6 +15,7 @@ app.use(cors())
 
 // routes
 app.use('/api/scrum/',srumRoutes)
+app.use('/api/auth/',authRoutes);
 
 app.use('/',(req,res)=>{
     res.send('not found')
