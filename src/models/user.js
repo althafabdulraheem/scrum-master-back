@@ -1,5 +1,6 @@
 const mongoose=require('mongoose');
 const validator=require('validator');
+const bcrypt=require('bcrypt');
 const UserSchema=new mongoose.Schema({
     email:{
         type:String,
@@ -13,26 +14,36 @@ const UserSchema=new mongoose.Schema({
 },{collection:'users'});
 
 UserSchema.statics.login=async function (email,password){
+   
+//    const salt=await bcrypt.genSalt(10)
+//    const hash=await bcrypt.hash('123',salt);
+// generated dummy password for testing
+
     if(!email || !password)
     {
-        throwError('Missing required parameters')
+        // return new Error('Missing required parameters')
+        return {error:'missing required parameters'};
     }
 
-    if(!validator.isEmail())
+    if(!validator.isEmail(email))
     {
-        throwError('Invalid Email');
+        // return new Error('Invalid Email');
+        return {error:'invalid email address'}
     }
 
     const user=await this.findOne({email:email})
+    
     if(!user)
     {
-        throwError('Invalid email address');
+        // return new Error('Invalid email address');
+        return {error:'email not found'};
     }
 
-    const match=await bcypt.compare(password,user.password)
+    const match=await bcrypt.compare(password,user.password)
     if(!match)
     {
-        throwError('Invalid password');
+        // return newError('Invalid password');
+        return {error:'invalid password'};
     }
 
     return user;
